@@ -5,6 +5,7 @@
  */
 package changeprone;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -14,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -71,7 +73,9 @@ public class UploadFolder extends javax.swing.JFrame {
     public void sortByName()
     {
          Collections.sort(filenames, (Files o1, Files o2) -> o1.Filename.compareTo(o2.Filename));
-    }
+    } 
+    
+    
 
     public UploadFolder() {
         initComponents();
@@ -261,7 +265,35 @@ public class UploadFolder extends javax.swing.JFrame {
         sortByName();
     }//GEN-LAST:event_selectfolderActionPerformed
 
-    
+    /**
+     *
+     * @param f
+     * @return
+     * @throws IOException
+     */
+    public  int getLines(File f) throws IOException {
+        FileReader fr;
+        fr = new FileReader(f);
+        BufferedReader br;
+        br = new BufferedReader(fr);
+        int i = 0;
+        boolean isEOF = false;
+        do {
+            String t = br.readLine();
+            if (t != null) {
+                isEOF = true;
+                t = t.replaceAll("\\n|\\t|\\s", "");
+                if ((!t.equals("")) && (!t.startsWith("//"))) {
+                    i = i + 1;
+                }
+            } else {
+                isEOF = false;
+            }
+        } while (isEOF);
+        br.close();
+        fr.close();
+        return i;
+    }
     public void addsheet( WritableWorkbook workbook , File f ) throws IOException, WriteException
     {       
         System.out.println("Adding when the file does not exist");
@@ -281,23 +313,27 @@ public class UploadFolder extends javax.swing.JFrame {
             sheet.addCell(new Label ( column++ ,row, "Filename "));
             sheet.addCell(new Label(column++ ,row, "File Size "));
             sheet.addCell(new Label(column++ ,row, "Location "));
+            sheet.addCell(new Label(column++ , row , "LOC"));
             row++;
             column = 0;
              
             for (Files filename : filenames) 
             {
-                String size = Long.toString(filename.Filesize) + "Bytes";
+                String size = Long.toString(filename.Filesize) + "  Bytes";
 //                System.out.println(filename.Filename);
-//                Number sno = new Number(column++ , row , count++);
-                Label sno = new Label (column++,row ,Integer.toString(count++));
+                Number sno = new Number(column++ , row , count++);
+//                Label sno = new Label (column++,row ,Integer.toString(count++));
                 Label fname = new Label ( column++ ,row, filename.Filename);
                 Label colsize = new Label(column++ ,row, size);
                 Label location = new Label(column++ ,row, filename.FileLocation);
+                File ans =  new File(filename.FileLocation);
                 
+                Number loc = new Number(column++ , row , getLines(ans));
                 sheet.addCell(sno);
                 sheet.addCell(fname);
                 sheet.addCell(colsize);
                 sheet.addCell(location);
+                sheet.addCell(loc);
                 
                 row++;
                 column = 0;
@@ -336,23 +372,27 @@ public class UploadFolder extends javax.swing.JFrame {
             sheet.addCell(new Label ( column++ ,row, "Filename "));
             sheet.addCell(new Label(column++ ,row, "File Size "));
             sheet.addCell(new Label(column++ ,row, "Location "));
+            sheet.addCell(new Label(column++ , row , "LOC"));
             row++;
             column = 0;
              
             for (Files filename : filenames) 
             {
-                String size = Long.toString(filename.Filesize) + "Bytes";
+                String size = Long.toString(filename.Filesize) + "  Bytes";
 //                System.out.println(filename.Filename);
                 Number sno = new Number(column++ , row , count++);
 //                Label sno = new Label (column++,row ,Integer.toString(count++));
                 Label fname = new Label ( column++ ,row, filename.Filename);
                 Label colsize = new Label(column++ ,row, size);
                 Label location = new Label(column++ ,row, filename.FileLocation);
+                File ans =  new File(filename.FileLocation);
                 
+                Number loc = new Number(column++ , row , getLines(ans));
                 sheet.addCell(sno);
                 sheet.addCell(fname);
                 sheet.addCell(colsize);
                 sheet.addCell(location);
+                sheet.addCell(loc);
                 
                 row++;
                 column = 0;
@@ -403,7 +443,7 @@ public class UploadFolder extends javax.swing.JFrame {
             for (Files filename : filenames) 
             {
                 String size = Long.toString(filename.Filesize) + "Bytes";
-                model.addRow(new Object[]{count++,filename.Filename, (size + "Bytes ") , filename.FileLocation});
+                model.addRow(new Object[]{count++,filename.Filename, size  , filename.FileLocation});
             }
             
             
