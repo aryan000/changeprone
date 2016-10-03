@@ -15,10 +15,10 @@ import javax.swing.table.DefaultTableModel;
 
 import java.io.File;
 import java.io.IOException;
-import javax.swing.JFrame;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
+import jxl.write.Number;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
@@ -36,7 +36,6 @@ public class UploadFolder extends javax.swing.JFrame {
 //    ArrayList filenames = new ArrayList();
     ArrayList<Files> filenames = new ArrayList<>();
     
-//    WritableWorkbook workbook = Workbook.createWorkbook(new File("output.xls"));
     
     public void listofFiles( File folder)
 {
@@ -263,8 +262,11 @@ public class UploadFolder extends javax.swing.JFrame {
     }//GEN-LAST:event_selectfolderActionPerformed
 
     
-    public void addsheet( WritableWorkbook workbook , File f) throws IOException, WriteException
-    {
+    public void addsheet( WritableWorkbook workbook , File f ) throws IOException, WriteException
+    {       
+        System.out.println("Adding when the file does not exist");
+//        File ft = new File(f);
+//        File ft = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
              workbook = Workbook.createWorkbook(f);
             int sheetno = workbook.getNumberOfSheets();
             
@@ -286,6 +288,7 @@ public class UploadFolder extends javax.swing.JFrame {
             {
                 String size = Long.toString(filename.Filesize) + "Bytes";
 //                System.out.println(filename.Filename);
+//                Number sno = new Number(column++ , row , count++);
                 Label sno = new Label (column++,row ,Integer.toString(count++));
                 Label fname = new Label ( column++ ,row, filename.Filename);
                 Label colsize = new Label(column++ ,row, size);
@@ -310,7 +313,7 @@ public class UploadFolder extends javax.swing.JFrame {
     
     public void addsheet(Workbook workbook1 ,File f) throws IOException, WriteException
     {   
-        System.out.println("when file exists");
+        System.out.println("adding when file exists");
           WritableWorkbook workbook = Workbook.createWorkbook(f, workbook1);
             int sheetno = workbook.getNumberOfSheets();
             
@@ -340,7 +343,8 @@ public class UploadFolder extends javax.swing.JFrame {
             {
                 String size = Long.toString(filename.Filesize) + "Bytes";
 //                System.out.println(filename.Filename);
-                Label sno = new Label (column++,row ,Integer.toString(count++));
+                Number sno = new Number(column++ , row , count++);
+//                Label sno = new Label (column++,row ,Integer.toString(count++));
                 Label fname = new Label ( column++ ,row, filename.Filename);
                 Label colsize = new Label(column++ ,row, size);
                 Label location = new Label(column++ ,row, filename.FileLocation);
@@ -367,31 +371,31 @@ public class UploadFolder extends javax.swing.JFrame {
     private void processActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processActionPerformed
         
         try {
-            // TODO add your handling code here:
-//        for (Files filename : filenames) {
+//            TODO add your handling code here:
+//            for (Files filename : filenames) {
 //            System.out.println(filename.Filename );
 //            System.out.println(filename.Filesize);
 //            System.out.println(filename.FileLocation);
 //            System.out.println(filename.file);
 //        }
             filetable.setVisible(true);
-//          File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
-            File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
+          File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
             
-            boolean checkfile = f.exists();
-            if(!checkfile)
-            {
-            WritableWorkbook workbook  = Workbook.createWorkbook(f); 
+          
+             if(!f.exists())
+             {  System.out.println("File does not exist");
+             
+             WritableWorkbook workbook   = null; 
             addsheet(workbook,f);
-            workbook.close();
-            }
             
-            else
-            { 
-              Workbook workbook = Workbook.getWorkbook(f);
+          }
+            else          { 
+              System.out.println("File cannot be created ");
+               Workbook workbook = Workbook.getWorkbook(f);
               addsheet(workbook,f);
               workbook.close();
-            }
+          }
+          
 
             int count = 1;
             DefaultTableModel model = (DefaultTableModel) FileDetails.getModel();
@@ -405,11 +409,7 @@ public class UploadFolder extends javax.swing.JFrame {
             
             JOptionPane.showMessageDialog(null,"Total number of files are : " + filenames.size());
             filenames.clear();
-        } catch (IOException ex) {
-            Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (WriteException ex) {
-            Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BiffException ex) {
+        } catch (IOException | WriteException | BiffException ex) {
             Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_processActionPerformed
