@@ -5,13 +5,22 @@
  */
 package changeprone;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
+import java.io.File;
+import java.io.IOException;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 /**
  *
@@ -25,6 +34,8 @@ public class UploadFolder extends javax.swing.JFrame {
      */
 //    ArrayList filenames = new ArrayList();
     ArrayList<Files> filenames = new ArrayList<>();
+    
+//    WritableWorkbook workbook = Workbook.createWorkbook(new File("output.xls"));
     
     public void listofFiles( File folder)
 {
@@ -237,27 +248,157 @@ public class UploadFolder extends javax.swing.JFrame {
         sortByName();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
+    public void addsheet( WritableWorkbook workbook , File f) throws IOException, WriteException
+    {
+             workbook = Workbook.createWorkbook(f);
+            int sheetno = workbook.getNumberOfSheets();
+            
+            String version = "version " + (sheetno);
+            System.out.println(sheetno);
+            WritableSheet sheet = workbook.createSheet(version, 0);
+            
+            int count = 1;
+            int row =  0 ;
+            int column = 0;
+            sheet.addCell(new Label (column++,row ,"S.No"));
+            sheet.addCell(new Label ( column++ ,row, "Filename "));
+            sheet.addCell(new Label(column++ ,row, "File Size "));
+            sheet.addCell(new Label(column++ ,row, "Location "));
+            row++;
+            column = 0;
+             
+            for (Files filename : filenames) 
+            {
+                String size = Long.toString(filename.Filesize) + "Bytes";
+//                System.out.println(filename.Filename);
+                Label sno = new Label (column++,row ,Integer.toString(count++));
+                Label fname = new Label ( column++ ,row, filename.Filename);
+                Label colsize = new Label(column++ ,row, size);
+                Label location = new Label(column++ ,row, filename.FileLocation);
+                
+                sheet.addCell(sno);
+                sheet.addCell(fname);
+                sheet.addCell(colsize);
+                sheet.addCell(location);
+                
+                row++;
+                column = 0;
+                
+            }
+            
+            workbook.write();
+            workbook.close();
+            System.out.println("finished when the file does not exist");
+            
+    }
+    
+    
+    public void addsheet(Workbook workbook1 ,File f) throws IOException, WriteException
+    {   
+        System.out.println("when file exists");
+          WritableWorkbook workbook = Workbook.createWorkbook(f, workbook1);
+            int sheetno = workbook.getNumberOfSheets();
+            
+            
+            for(int i =0;i<sheetno; i++)
+            {
+                WritableSheet sheet2 = workbook.getSheet(i);
+            }
+            
+//            workbook.write();
+            
+            System.out.println(sheetno);
+            String version = "version " + sheetno;
+            WritableSheet sheet = workbook.createSheet(version, sheetno+1);
+            
+            int count = 1;
+            int row =  0 ;
+            int column = 0;
+            sheet.addCell(new Label (column++,row ,"S.No"));
+            sheet.addCell(new Label ( column++ ,row, "Filename "));
+            sheet.addCell(new Label(column++ ,row, "File Size "));
+            sheet.addCell(new Label(column++ ,row, "Location "));
+            row++;
+            column = 0;
+             
+            for (Files filename : filenames) 
+            {
+                String size = Long.toString(filename.Filesize) + "Bytes";
+//                System.out.println(filename.Filename);
+                Label sno = new Label (column++,row ,Integer.toString(count++));
+                Label fname = new Label ( column++ ,row, filename.Filename);
+                Label colsize = new Label(column++ ,row, size);
+                Label location = new Label(column++ ,row, filename.FileLocation);
+                
+                sheet.addCell(sno);
+                sheet.addCell(fname);
+                sheet.addCell(colsize);
+                sheet.addCell(location);
+                
+                row++;
+                column = 0;
+                
+            }
+            
+            workbook.write();
+            workbook.close();
+            workbook1.close();
+            System.out.println("finished when the file already exists");
+            
+    }
+    
+    
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
 //        for (Files filename : filenames) {
 //            System.out.println(filename.Filename );
 //            System.out.println(filename.Filesize);
 //            System.out.println(filename.FileLocation);
 //            System.out.println(filename.file);
 //        }
-        jInternalFrame1.setVisible(true);
-        
-        int count = 1;
-        DefaultTableModel model = (DefaultTableModel) FileDetails.getModel();
-        for (Files filename : filenames) {
+            jInternalFrame1.setVisible(true);
+//            File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
+            File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
+            
+            boolean checkfile = f.exists();
+            
+            if(!checkfile)
+            {
+            WritableWorkbook workbook  = Workbook.createWorkbook(f); 
+            addsheet(workbook,f);
+            workbook.close();
+            }
+            
+            else
+            { 
+              Workbook workbook = Workbook.getWorkbook(f);
+              addsheet(workbook,f);
+              workbook.close();
+                
+            }
+            int count = 1;
+            DefaultTableModel model = (DefaultTableModel) FileDetails.getModel();
              
-             String size = Long.toString(filename.Filesize);
-             System.out.println(filename.Filename);
-        model.addRow(new Object[]{count++,filename.Filename, (size + "Bytes ") , filename.FileLocation});
+            for (Files filename : filenames) 
+            {
+                String size = Long.toString(filename.Filesize) + "Bytes";
+                model.addRow(new Object[]{count++,filename.Filename, (size + "Bytes ") , filename.FileLocation});
+            }
+            
+            
+            JOptionPane.showMessageDialog(null,"Total number of files are : " + filenames.size());
+            filenames.clear();
+        } catch (IOException ex) {
+            Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WriteException ex) {
+            Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BiffException ex) {
+            Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-        JOptionPane.showMessageDialog(null,filenames.size());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void non(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_non
