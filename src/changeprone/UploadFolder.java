@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JFrame;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -76,7 +77,7 @@ public class UploadFolder extends javax.swing.JFrame {
     public UploadFolder() {
         initComponents();
        
-        jInternalFrame1.setVisible(false);
+        filetable.setVisible(false);
         
     }
     
@@ -93,11 +94,12 @@ public class UploadFolder extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jInternalFrame1 = new javax.swing.JInternalFrame();
+        selectfolder = new javax.swing.JButton();
+        process = new javax.swing.JButton();
+        filetable = new javax.swing.JInternalFrame();
         jScrollPane1 = new javax.swing.JScrollPane();
         FileDetails = new javax.swing.JTable();
+        uploadanotherversion = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -110,21 +112,21 @@ public class UploadFolder extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel1.setText(" Change Proneness");
 
-        jButton1.setText("Select Folder");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        selectfolder.setText("Select Folder");
+        selectfolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                selectfolderActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Process");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        process.setText("Process");
+        process.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                processActionPerformed(evt);
             }
         });
 
-        jInternalFrame1.setVisible(true);
+        filetable.setVisible(true);
 
         FileDetails.setAutoCreateRowSorter(true);
         FileDetails.setModel(new javax.swing.table.DefaultTableModel(
@@ -145,16 +147,23 @@ public class UploadFolder extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(FileDetails);
 
-        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
-        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
-        jInternalFrame1Layout.setHorizontalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout filetableLayout = new javax.swing.GroupLayout(filetable.getContentPane());
+        filetable.getContentPane().setLayout(filetableLayout);
+        filetableLayout.setHorizontalGroup(
+            filetableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
         );
-        jInternalFrame1Layout.setVerticalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        filetableLayout.setVerticalGroup(
+            filetableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
+
+        uploadanotherversion.setText("Upload Another Version");
+        uploadanotherversion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadanotherversionActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -189,31 +198,35 @@ public class UploadFolder extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(65, 65, 65)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(87, 87, 87))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(186, 186, 186))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(selectfolder, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56)
+                        .addComponent(process, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(66, 66, 66)
+                        .addComponent(uploadanotherversion))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(filetable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(filetable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(selectfolder, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(process, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(uploadanotherversion, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(57, 57, 57))
         );
 
@@ -225,7 +238,7 @@ public class UploadFolder extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void selectfolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectfolderActionPerformed
         String userDir = System.getProperty("user.home");
         JFileChooser folder = new JFileChooser(userDir+"/Desktop");
         folder.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -238,6 +251,7 @@ public class UploadFolder extends javax.swing.JFrame {
 //            System.out.println(myfolder);         
         }
         
+        
        
         if(myfolder!=null)
         {
@@ -246,7 +260,7 @@ public class UploadFolder extends javax.swing.JFrame {
         
         listofFiles(myfolder);
         sortByName();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_selectfolderActionPerformed
 
     
     public void addsheet( WritableWorkbook workbook , File f) throws IOException, WriteException
@@ -350,7 +364,7 @@ public class UploadFolder extends javax.swing.JFrame {
     
     
     
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void processActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processActionPerformed
         
         try {
             // TODO add your handling code here:
@@ -360,12 +374,11 @@ public class UploadFolder extends javax.swing.JFrame {
 //            System.out.println(filename.FileLocation);
 //            System.out.println(filename.file);
 //        }
-            jInternalFrame1.setVisible(true);
-//            File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
+            filetable.setVisible(true);
+//          File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
             File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
             
             boolean checkfile = f.exists();
-            
             if(!checkfile)
             {
             WritableWorkbook workbook  = Workbook.createWorkbook(f); 
@@ -378,11 +391,11 @@ public class UploadFolder extends javax.swing.JFrame {
               Workbook workbook = Workbook.getWorkbook(f);
               addsheet(workbook,f);
               workbook.close();
-                
             }
+
             int count = 1;
             DefaultTableModel model = (DefaultTableModel) FileDetails.getModel();
-             
+            
             for (Files filename : filenames) 
             {
                 String size = Long.toString(filename.Filesize) + "Bytes";
@@ -399,11 +412,18 @@ public class UploadFolder extends javax.swing.JFrame {
         } catch (BiffException ex) {
             Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_processActionPerformed
 
     private void non(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_non
         // TODO add your handling code here:
     }//GEN-LAST:event_non
+
+    private void uploadanotherversionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadanotherversionActionPerformed
+            // TODO add your handling code here:
+        filetable.setVisible(false);
+         JOptionPane.showMessageDialog(null,"Upload Another Version");
+         
+    }//GEN-LAST:event_uploadanotherversionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -441,9 +461,7 @@ public class UploadFolder extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem About;
     private javax.swing.JTable FileDetails;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JInternalFrame filetable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -451,6 +469,9 @@ public class UploadFolder extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton process;
+    private javax.swing.JButton selectfolder;
+    private javax.swing.JButton uploadanotherversion;
     // End of variables declaration//GEN-END:variables
 
 
