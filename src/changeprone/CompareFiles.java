@@ -6,8 +6,13 @@
 package changeprone;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
+
 
 /**
  *
@@ -155,7 +160,18 @@ public class CompareFiles extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         System.out.println(jLabel1.getText());
-        System.out.println(jLabel2.getText());
+        File file1 = new File(jLabel1.getText());
+        File file2 = new File (jLabel2.getText());
+        
+        try {
+            boolean compare1 = FileUtils.contentEquals(file1,file2);
+            
+            JOptionPane.showMessageDialog(null, " the result is : " +  compare1);
+        } catch (IOException ex) {
+            Logger.getLogger(CompareFiles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -187,10 +203,8 @@ public class CompareFiles extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CompareFiles().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new CompareFiles().setVisible(true);
         });
     }
 
