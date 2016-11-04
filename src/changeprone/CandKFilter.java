@@ -5,20 +5,23 @@
  */
 package changeprone;
 
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import static java.time.Clock.system;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -84,13 +87,18 @@ public class CandKFilter extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText(" ");
+        jLabel1.setText("No File Selected");
         jLabel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jButton1.setText("Choose File");
+        jButton1.setText("Choose CSV File");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -99,20 +107,53 @@ public class CandKFilter extends javax.swing.JFrame {
 
         jLabel2.setText("File Selection");
 
+        jLabel3.setText("No File Selected");
+        jLabel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jButton2.setText("Choose Project File");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Select Project version ( only in number)");
+
+        jTextField1.setText("0");
+
+        jButton3.setText("Filter C and K File ");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(34, 34, 34)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5))
+                                .addGap(22, 22, 22))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)))
+                        .addGap(166, 166, 166)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -121,10 +162,21 @@ public class CandKFilter extends javax.swing.JFrame {
                 .addGap(38, 38, 38)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jButton1))
-                .addContainerGap(219, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
         );
 
         pack();
@@ -155,14 +207,14 @@ public class CandKFilter extends javax.swing.JFrame {
      }
      
      
-     ArrayList<String> getjavafiles( File f)
+     ArrayList<String> getjavafiles( File f  , int version)
      {
          ArrayList<String> javafiles = new ArrayList<>();
         
         try {
             Workbook wb = null;
              wb = Workbook.getWorkbook(f);
-            Sheet sh = wb.getSheet(0);
+            Sheet sh = wb.getSheet(version);
             System.out.println(sh.getRows());
             for(int i =1;i<sh.getRows();i++)
             {  
@@ -204,18 +256,90 @@ public class CandKFilter extends javax.swing.JFrame {
         {   
             jLabel1.setText(myfile.getAbsolutePath());
 //            JOptionPane.showMessageDialog(null,"The current choosen file directory is : " + myfile);
-            File f = new File(myfile.getAbsolutePath());
-            data = getcsv(f);
+//            File f = new File(myfile.getAbsolutePath());
+//            data = getcsv(f);
             
         } 
         
-            ArrayList<String> javafiles = getjavafiles(new File("C:\\Users\\aryan_000\\Desktop\\output.xls"));
-            System.out.println(javafiles.size());
-        System.out.println("javafiles size is : " + data.size());
+//            ArrayList<String> javafiles = getjavafiles(new File("C:\\Users\\aryan_000\\Desktop\\output.xls"));
+//            System.out.println(javafiles.size());
+//        System.out.println("javafiles size is : " + data.size());
         
         
        
-       ArrayList<ArrayList<String>> outer = new ArrayList<ArrayList<String>>(); 
+        
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String userDir = System.getProperty("user.home");
+        JFileChooser projectfile = new JFileChooser(userDir+"/Desktop");
+        projectfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnvalue = projectfile.showSaveDialog(this);
+        
+        File myfile= null;
+        if(returnvalue == JFileChooser.APPROVE_OPTION)
+        {
+            myfile = projectfile.getSelectedFile();
+//            System.out.println(myfolder);         
+        }
+            
+        if(myfile!=null)
+        {   
+            jLabel3.setText(myfile.getAbsolutePath());
+//            JOptionPane.showMessageDialog(null,"The current choosen file directory is : " + myfile);
+//            File f = new File(myfile.getAbsolutePath());
+//            data = getcsv(f);
+            
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        // here i have to process the file
+        
+        
+         JFrame frame = new JFrame("Options");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 300);
+        frame.setVisible(true);
+        JPanel panel = new JPanel();
+        ArrayList<String> myArrayList = new ArrayList<String>();
+        myArrayList.add("checkbox 1");
+        myArrayList.add("checkbox 2");
+        myArrayList.add("checkbox 3");
+        myArrayList.add("checkbox 4");
+        myArrayList.add("checkbox 5");
+
+//        panel.setLayout(new BoxLayout(BoxLayout.Y_AXIS, panel));
+        ArrayList<JCheckBox> checkboxes = new ArrayList<>();
+
+        for (String element : myArrayList) {
+            JCheckBox box = new JCheckBox(element);
+            checkboxes.add(box);
+            panel.add(box);
+        }
+
+        frame.add(panel);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        File f = new File(jLabel1.getText());
+        ArrayList<CSVFile> data = null  ;  
+        data = getcsv(f);
+        int version = Integer.parseInt(jTextField1.getText());
+        ArrayList<String> javafiles = getjavafiles(new File(jLabel3.getText()),version );
+        
+        
+         ArrayList<ArrayList<String>> outer = new ArrayList<ArrayList<String>>(); 
         String line ;
       String pattern  ;
       Scanner sc = new Scanner(System.in);
@@ -249,7 +373,7 @@ public class CandKFilter extends javax.swing.JFrame {
       }
         
       
-     for(int i =0;i<outer.size();i++)
+    /* for(int i =0;i<outer.size();i++)
      {
          for(int j = 0;j<outer.get(i).size();j++)
          {
@@ -258,10 +382,9 @@ public class CandKFilter extends javax.swing.JFrame {
          
          System.out.println("\n\n");
      }
-         
-        
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+       */
+       
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -300,8 +423,13 @@ public class CandKFilter extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
 
