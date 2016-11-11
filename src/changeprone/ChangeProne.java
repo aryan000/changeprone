@@ -18,7 +18,9 @@ public class ChangeProne {
         // TODO code application logic here
         System.out.println("hello world");
         
-                
+            Metric m = new Metric();
+            
+            
     }
     
 }

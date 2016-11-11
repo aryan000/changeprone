@@ -17,6 +17,9 @@ import javax.swing.table.DefaultTableModel;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -294,47 +297,65 @@ public class UploadFolder extends javax.swing.JFrame {
         fr.close();
         return i;
     }
-    public void addsheet( WritableWorkbook workbook , File f ) throws IOException, WriteException
+    public void addsheet( WritableWorkbook workbook , File f ) throws IOException, WriteException, BiffException
     {       
         System.out.println("Adding when the file does not exist");
-//        File ft = new File(f);
-//        File ft = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
-             workbook = Workbook.createWorkbook(f);
+            workbook = Workbook.createWorkbook(f);
             int sheetno = workbook.getNumberOfSheets();
             
-            String version = "version " + (sheetno);
-            System.out.println(sheetno);
+            String version = "version " +  sheetno ;
+//            System.out.println(sheetno);
             WritableSheet sheet = workbook.createSheet(version, 0);
             
             int count = 1;
             int row =  0 ;
             int column = 0;
-            sheet.addCell(new Label (column++,row ,"S.No"));
+           // sheet.addCell(new Label (column++,row ,"S.No"));
             sheet.addCell(new Label ( column++ ,row, "Filename "));
-            sheet.addCell(new Label(column++ ,row, "File Size "));
-            sheet.addCell(new Label(column++ ,row, "Location "));
+            //sheet.addCell(new Label(column++ ,row, "File Size "));
+           // sheet.addCell(new Label(column++ ,row, "Location "));
             sheet.addCell(new Label(column++ , row , "LOC"));
+            sheet.addCell(new Label(column++ , row , "BOC"));
+            
             row++;
             column = 0;
              
+            Boc.curr_version  = 1;
             for (Files filename : filenames) 
             {
-                String size = Long.toString(filename.Filesize) + "  Bytes";
+//                String size = Long.toString(filename.Filesize) + "  Bytes";
 //                System.out.println(filename.Filename);
-                Number sno = new Number(column++ , row , count++);
+               // Number sno = new Number(column++ , row , count++);
 //                Label sno = new Label (column++,row ,Integer.toString(count++));
                 Label fname = new Label ( column++ ,row, filename.Filename);
-                Label colsize = new Label(column++ ,row, size);
-                Label location = new Label(column++ ,row, filename.FileLocation);
+//                Label colsize = new Label(column++ ,row, size);
+                //Label location = new Label(column++ ,row, filename.FileLocation);
                 File ans =  new File(filename.FileLocation);
-                
                 Number loc = new Number(column++ , row , getLines(ans));
-                sheet.addCell(sno);
+             //   sheet.addCell(sno);
                 sheet.addCell(fname);
-                sheet.addCell(colsize);
-                sheet.addCell(location);
                 sheet.addCell(loc);
+               // sheet.addCell(colsize);
+                //sheet.addCell(location);
+              
+                int boc_value  ;
                 
+                if(Boc.bocMap.containsKey(filename.Filename))
+                {boc_value  = Boc.bocMap.get(filename.Filename);
+                    
+                }
+                else 
+                {
+                    boc_value = Boc.curr_version;
+                    
+                    Boc.bocMap.put(filename.Filename, boc_value);
+                }
+                System.out.println( filename.Filename + " and " + boc_value);
+                
+                
+                
+                Number boc = new Number(column++ , row , boc_value);
+                sheet.addCell(boc);
                 row++;
                 column = 0;
                 
@@ -342,14 +363,39 @@ public class UploadFolder extends javax.swing.JFrame {
             
             workbook.write();
             workbook.close();
+            
             System.out.println("finished when the file does not exist");
+            
+        /*     Set set = Boc.bocMap.entrySet();
+         Iterator it = set.iterator();
+         
+         while(it.hasNext()) {
+         Map.Entry me = (Map.Entry)it.next();
+         System.out.println(me.getKey() + ": " + me.getValue());
+         
+         }
+         */
+         System.out.println("finishes adding boc");
+         
+//         FchAndLchAndCho cho = new FchAndLchAndCho();
+//           cho.addCho(f);
             
     }
     
     
-    public void addsheet(Workbook workbook1 ,File f) throws IOException, WriteException
+    public void addsheet(Workbook workbook1 ,File f) throws IOException, WriteException, BiffException
     {   
         System.out.println("adding when file exists");
+        
+       /*  Set set = Boc.bocMap.entrySet();
+         Iterator it = set.iterator();
+         
+         while(it.hasNext()) {
+         Map.Entry me = (Map.Entry)it.next();
+         System.out.println(me.getKey() + ": " + me.getValue());
+         
+         }
+        */ 
           WritableWorkbook workbook = Workbook.createWorkbook(f, workbook1);
             int sheetno = workbook.getNumberOfSheets();
             
@@ -364,15 +410,16 @@ public class UploadFolder extends javax.swing.JFrame {
             System.out.println(sheetno);
             String version = "version " + sheetno;
             WritableSheet sheet = workbook.createSheet(version, sheetno+1);
-            
+            Boc.curr_version  = sheetno + 1;
             int count = 1;
             int row =  0 ;
             int column = 0;
-            sheet.addCell(new Label (column++,row ,"S.No"));
+          //  sheet.addCell(new Label (column++,row ,"S.No"));
             sheet.addCell(new Label ( column++ ,row, "Filename "));
-            sheet.addCell(new Label(column++ ,row, "File Size "));
-            sheet.addCell(new Label(column++ ,row, "Location "));
+            //sheet.addCell(new Label(column++ ,row, "File Size "));
+            //sheet.addCell(new Label(column++ ,row, "Location "));
             sheet.addCell(new Label(column++ , row , "LOC"));
+            sheet.addCell(new Label(column++ , row , "BOC"));
             row++;
             column = 0;
              
@@ -380,20 +427,37 @@ public class UploadFolder extends javax.swing.JFrame {
             {
                 String size = Long.toString(filename.Filesize) + "  Bytes";
 //                System.out.println(filename.Filename);
-                Number sno = new Number(column++ , row , count++);
+                //Number sno = new Number(column++ , row , count++);
 //                Label sno = new Label (column++,row ,Integer.toString(count++));
                 Label fname = new Label ( column++ ,row, filename.Filename);
-                Label colsize = new Label(column++ ,row, size);
-                Label location = new Label(column++ ,row, filename.FileLocation);
+               // Label colsize = new Label(column++ ,row, size);
+               // Label location = new Label(column++ ,row, filename.FileLocation);
                 File ans =  new File(filename.FileLocation);
                 
                 Number loc = new Number(column++ , row , getLines(ans));
-                sheet.addCell(sno);
+               // sheet.addCell(sno);
                 sheet.addCell(fname);
-                sheet.addCell(colsize);
-                sheet.addCell(location);
+               // sheet.addCell(colsize);
+               // sheet.addCell(location);
                 sheet.addCell(loc);
                 
+                int boc_value  ;
+                
+                if(Boc.bocMap.containsKey(filename.Filename))
+                {
+                    boc_value  = Boc.bocMap.get(filename.Filename);
+                    System.out.println(filename.Filename + " found");
+                }
+                else 
+                {
+                    boc_value = Boc.curr_version;
+                }
+                System.out.println( filename.Filename + " and " + boc_value);
+                
+                
+                
+                Number boc = new Number(column++ , row , boc_value);
+                sheet.addCell(boc);
                 row++;
                 column = 0;
                 
@@ -404,6 +468,9 @@ public class UploadFolder extends javax.swing.JFrame {
             workbook1.close();
             System.out.println("finished when the file already exists");
             
+//           FchAndLchAndCho cho = new FchAndLchAndCho();
+//           cho.addCho(f);
+//           cho.addFchAndLch(f);
     }
     
     
@@ -411,14 +478,7 @@ public class UploadFolder extends javax.swing.JFrame {
     private void processActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processActionPerformed
         
         try {
-//            TODO add your handling code here:
-//            for (Files filename : filenames) {
-//            System.out.println(filename.Filename );
-//            System.out.println(filename.Filesize);
-//            System.out.println(filename.FileLocation);
-//            System.out.println(filename.file);
-//        }
-            filetable.setVisible(true);
+          filetable.setVisible(true);
           File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
             
           
@@ -426,9 +486,9 @@ public class UploadFolder extends javax.swing.JFrame {
              {  System.out.println("File does not exist");
              
              WritableWorkbook workbook   = null; 
-            addsheet(workbook,f);
+                addsheet(workbook,f);
             
-          }
+             }
             else          { 
               System.out.println("File cannot be created ");
                Workbook workbook = Workbook.getWorkbook(f);

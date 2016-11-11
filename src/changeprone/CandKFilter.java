@@ -5,7 +5,7 @@
  */
 package changeprone;
 
-import java.awt.List;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,11 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -35,7 +32,7 @@ class CSVFile
     public String kind = "";
     public String name = "";
     int [] arr = new int[10];
-    
+    ArrayList<Integer> metric = new ArrayList<>();
     
   public CSVFile(String st)
   {   
@@ -54,13 +51,13 @@ class CSVFile
           }
          else if(retval.isEmpty())
          {
-             arr[i-2] = 0;
-             i++;
+             metric.add(0);
          }
           else
-         {
-             arr[i-2] = Integer.parseInt(retval);
-             i++;
+         {  
+             metric.add(Integer.parseInt(retval));
+//             arr[i-2] = Integer.parseInt(retval?);
+//             i++;
          }
                       
                    }
@@ -92,6 +89,10 @@ public class CandKFilter extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        FileList = new javax.swing.JTable();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -128,6 +129,63 @@ public class CandKFilter extends javax.swing.JFrame {
             }
         });
 
+        FileList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "S.Noll", "File Name", "C and K File Name", "Checkbox", "Selection"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        FileList.setColumnSelectionAllowed(true);
+        jScrollPane1.setViewportView(FileList);
+        FileList.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        jButton4.setText("Save");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
+                        .addComponent(jButton4)))
+                .addContainerGap(115, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(jButton4))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -153,7 +211,8 @@ public class CandKFilter extends javax.swing.JFrame {
                         .addGap(42, 42, 42)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -172,11 +231,17 @@ public class CandKFilter extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel5))
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(34, Short.MAX_VALUE))))
         );
 
         pack();
@@ -215,7 +280,7 @@ public class CandKFilter extends javax.swing.JFrame {
             Workbook wb = null;
              wb = Workbook.getWorkbook(f);
             Sheet sh = wb.getSheet(version);
-            System.out.println(sh.getRows());
+//            System.out.println(sh.getRows());
             for(int i =1;i<sh.getRows();i++)
             {  
 //                System.out.println(sh.getCell(1,i).getContents());
@@ -228,7 +293,7 @@ public class CandKFilter extends javax.swing.JFrame {
             Logger.getLogger(CandKFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-         System.out.println("before returning");
+//         System.out.println("before returning");
         return javafiles;
      }
      
@@ -300,38 +365,6 @@ public class CandKFilter extends javax.swing.JFrame {
         // TODO add your handling code here:
         // here i have to process the file
         
-        
-         JFrame frame = new JFrame("Options");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 300);
-        frame.setVisible(true);
-        JPanel panel = new JPanel();
-        ArrayList<String> myArrayList = new ArrayList<String>();
-        myArrayList.add("checkbox 1");
-        myArrayList.add("checkbox 2");
-        myArrayList.add("checkbox 3");
-        myArrayList.add("checkbox 4");
-        myArrayList.add("checkbox 5");
-
-//        panel.setLayout(new BoxLayout(BoxLayout.Y_AXIS, panel));
-        ArrayList<JCheckBox> checkboxes = new ArrayList<>();
-
-        for (String element : myArrayList) {
-            JCheckBox box = new JCheckBox(element);
-            checkboxes.add(box);
-            panel.add(box);
-        }
-
-        frame.add(panel);
-        
-        
-        
-        
-        
-        
-        
-        
-        
         File f = new File(jLabel1.getText());
         ArrayList<CSVFile> data = null  ;  
         data = getcsv(f);
@@ -342,49 +375,60 @@ public class CandKFilter extends javax.swing.JFrame {
          ArrayList<ArrayList<String>> outer = new ArrayList<ArrayList<String>>(); 
         String line ;
       String pattern  ;
+       DefaultTableModel model = (DefaultTableModel) FileList.getModel();
       Scanner sc = new Scanner(System.in);
-      
+      int count = 1;
       for(int  j =0;j<javafiles.size();j++)
       { 
-          ArrayList<String> inner = new ArrayList<String>(); 
-          inner.add(javafiles.get(j));
+//          ArrayList<String> inner = new ArrayList<String>(); 
+//          inner.add(javafiles.get(j));
         for(int i =0;i<data.size();i++)
         {
 //            System.out.println( data.get(i).name);
-            line = data.get(i).name;
+             
+              line = data.get(i).name;
                
              String temp = javafiles.get(j);
              pattern = temp.substring(0,temp.lastIndexOf("."));
-               
-              
-             
              Pattern r = Pattern.compile(pattern);
-             
              Matcher m = r.matcher(line);
                 if (m.find( )) {
 //                    System.out.println("Found value: " + m.group(0));
-                    inner.add(line);
+//                    inner.add(line);
+             
+             
+             
+             model.addRow(new Object[]{count++,temp,line,data.get(i).metric, Boolean.FALSE});
                     
                 } else {
 //                    System.out.println("NO MATCH");
                 }
         } 
-        outer.add(inner);
+//        outer.add(inner);
       }
-        
-      
-    /* for(int i =0;i<outer.size();i++)
-     {
-         for(int j = 0;j<outer.get(i).size();j++)
-         {
-             System.out.println(outer.get(i).get(j));
-         }
-         
-         System.out.println("\n\n");
-     }
-       */
-       
+    
+      // end of button function  
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        System.out.println("Number of rows : " + FileList.getRowCount());
+        for (int i = 0; i < FileList.getRowCount(); i++) {
+            Boolean isChecked = false;
+            
+      isChecked =  (Boolean) FileList.getValueAt(i, 4);
+            
+     if (isChecked) {
+        //get the values of the columns you need. 
+         System.out.println(FileList.getValueAt(i, 2).toString());
+         
+    } else {
+//        System.out.printf("Row %s is not checked \n", i);
+    }
+     isChecked = false;
+//            System.out.println(FileList.getValueAt(i, 0 ).toString()  + FileList.getValueAt(i, 1) + FileList.getValueAt(i, 4));
+}
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -422,13 +466,17 @@ public class CandKFilter extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable FileList;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
