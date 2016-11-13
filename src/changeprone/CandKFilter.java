@@ -387,7 +387,7 @@ public class CandKFilter extends javax.swing.JFrame {
         String line ;
       String pattern  ;
        DefaultTableModel model = (DefaultTableModel) FileList.getModel();
-      Scanner sc = new Scanner(System.in);
+//      Scanner sc = new Scanner(System.in);
       int count = 1;
         for (String javafile : javafiles) {
 //          ArrayList<String> inner = new ArrayList<String>(); 

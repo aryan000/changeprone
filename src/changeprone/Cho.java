@@ -7,6 +7,7 @@ package changeprone;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -83,16 +84,17 @@ public class Cho extends javax.swing.JFrame {
      { 
          
          Workbook workbook1 = Workbook.getWorkbook(f); // read mode
-         System.out.println("adding cho in files");
+         System.out.println("Adding cho in files");
          WritableWorkbook workbook = Workbook.createWorkbook(f, workbook1); // write mode
          int sheetno = workbook.getNumberOfSheets();
             
-         System.out.println("Total number of sheets are  : " + sheetno);
+//         System.out.println("Total number of sheets are  : " + sheetno);
             
             for(int i =0;i<sheetno; i++)
             {
                 WritableSheet sheet2 = workbook.getSheet(i);
                 System.out.println(sheet2.getCell(0,0).getContents());
+                HashMap<String,TachAndChd> tachandchd = new HashMap<>();
                 int col_tach = -1;
                 int loc_col = -1;
                 int cho_col = sheet2.getColumns();
@@ -103,11 +105,9 @@ public class Cho extends javax.swing.JFrame {
                     String temp = sheet2.getCell(j,0).getContents();
 //                    System.out.println( "check " + j  + temp);
                     if(temp.equals("TACH"))
-                    {col_tach = j;
-                      
-                      sheet2.addCell(new Label(cho_col , 0 , "CHO"));
-                      chd_col = cho_col + 1;
-                    
+                    {   col_tach = j;
+                        sheet2.addCell(new Label(cho_col , 0 , "CHO"));
+                        chd_col = cho_col + 1;
                     }
                     
                     if(temp.equals("LOC"))
@@ -115,10 +115,8 @@ public class Cho extends javax.swing.JFrame {
                         loc_col = j;
                         sheet2.addCell(new Label(chd_col , 0 , "CHD"));
                     }
-                    
                 } 
                  
-                
 //                if(col_tach!=-1)
 //                    System.out.println("Tach found and now adding CHO");
 //                
@@ -128,7 +126,8 @@ public class Cho extends javax.swing.JFrame {
                 if(col_tach!=-1)
                 {
                     for(int j=1;j<sheet2.getRows();j++)
-                    {
+                    {   
+                        String  filename = sheet2.getCell(0,j).getContents();
                         tach_value = Integer.parseInt(sheet2.getCell(col_tach, j).getContents());
                         loc_value = Integer.parseInt(sheet2.getCell(loc_col, j).getContents());
                         if(tach_value==0)
@@ -149,9 +148,13 @@ public class Cho extends javax.swing.JFrame {
                         
                         Number chd = new Number(chd_col , j , chd_value);
                         sheet2.addCell(chd);
+                        
+                        tachandchd.put(filename, new TachAndChd(tach_value,chd_value));
                     } 
+                    
+                    LcaAndLcd.lcaandlcd.add(tachandchd);
                 }// end of all the rows in a single sheet
-                System.out.println("cho adding completed");
+                System.out.println( "Cho  and Chd adding completed");
                 
             } // end of all the sheet
         
@@ -168,8 +171,8 @@ public class Cho extends javax.swing.JFrame {
         String userDir = System.getProperty("user.home");
         JFileChooser folder = new JFileChooser(userDir+"/Desktop");
         folder.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
-     "Excel Files  (*.xls)", "xls");
+        FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
+        "Excel Files  (*.xls)", "xls");
         folder.setFileFilter(xmlfilter);
         int returnvalue = folder.showSaveDialog(this);
         File myfolder = null;
@@ -177,7 +180,6 @@ public class Cho extends javax.swing.JFrame {
         if(returnvalue == JFileChooser.APPROVE_OPTION)
         {
             myfolder = folder.getSelectedFile();
-            //            System.out.println(myfolder);
         }
 
         if(myfolder!=null)

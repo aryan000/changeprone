@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.io.FileUtils;
 
 
@@ -113,6 +114,10 @@ public class CompareFiles extends javax.swing.JFrame {
         String userDir = System.getProperty("user.home");
         JFileChooser folder = new JFileChooser(userDir+"/Desktop");
 //        folder.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        folder.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
+     "Excel Files  (*.xls)", "xls");
+        folder.setFileFilter(xmlfilter);
         int returnvalue = folder.showSaveDialog(this);
         
         File myfolder = null;
@@ -136,6 +141,10 @@ public class CompareFiles extends javax.swing.JFrame {
         
         String userDir = System.getProperty("user.home");
         JFileChooser folder = new JFileChooser(userDir+"/Desktop");
+        folder.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
+     "Excel Files  (*.xls)", "xls");
+        folder.setFileFilter(xmlfilter);
 //        folder.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnvalue = folder.showSaveDialog(this);
         

@@ -14,10 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.write.Number;
@@ -278,6 +282,62 @@ public class CandKFilter1 extends javax.swing.JFrame {
         
         
   }
+  
+  public void showtable(HashMap<String , CSVFile> candkdata)
+  {
+       TableDisplay td = new TableDisplay();
+       td.setVisible(true);
+       
+       JTable jt = td.gettable();
+       
+      DefaultTableModel model = (DefaultTableModel) jt.getModel();
+      
+       jt.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+       
+       JScrollPane js = td.getJScrollPane();
+         js.setViewportView(jt);
+          Vector colnames = new Vector();
+          colnames.add("S.No");
+          colnames.add("Filename");
+          colnames.add("Understand File Name");
+          colnames.add("CBO");
+          colnames.add("WMC");
+          colnames.add("RFC");
+          colnames.add("LCOM");
+          colnames.add("NOC");
+          colnames.add("DIT");
+         
+//       model.setColumnIdentifiers(new Object[] { "S.No"});
+       model.setColumnIdentifiers(colnames);
+     
+//       , Filename","Understand FileName ,CBO,WMC,RFC,LCOM,NOC,DIT 
+               
+               model.setColumnCount(9);
+     int count = 1;
+      for (String key : candkdata.keySet()) 
+        {  Vector row = new Vector();
+        
+            CSVFile temp = candkdata.get(key);
+//            model.addColumn(key);
+//            model.addColumn(temp.name);
+            row.add(count++);
+            row.add(key);
+            row.add(temp.name);
+          for (int i=0;i<temp.metric.size();i++) {
+              int num = temp.metric.get(i);
+//              model.addColumn(num);
+              row.add(num);
+             
+          } 
+          model.addRow(row);
+//          model.insertRow(row , new Object[] {});
+          
+//            System.out.println( key  + "    " + temp.name);
+            
+         }
+        
+      
+  }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
          
@@ -310,6 +370,7 @@ public class CandKFilter1 extends javax.swing.JFrame {
         
         try {
             buildcsv(candkdata);
+            showtable(candkdata);
         } catch (IOException | WriteException ex) {
             Logger.getLogger(CandKFilter1.class.getName()).log(Level.SEVERE, null, ex);
         }

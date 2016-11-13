@@ -7,6 +7,7 @@ package changeprone;
 
 import java.io.File;
 import java.io.IOException;
+import static java.lang.Math.abs;
 import java.util.HashMap;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -25,75 +26,16 @@ public class FchAndLchAndCho {
     public final static HashMap<String, Integer> fch = new HashMap<>();
     public final static HashMap<String, Integer> lch = new HashMap<>();
     public final static HashMap<String, Integer> frch = new HashMap<>();
-        static int curr_version  = 0;
+    public final static HashMap<String, Integer> loc = new HashMap<>();
+    static int curr_version  = 0;
         
         
-   public void addCho(File f) throws IOException, BiffException, WriteException 
-     { 
-         
-         Workbook workbook1 = Workbook.getWorkbook(f); // read mode
-         System.out.println("here");
-         WritableWorkbook workbook = Workbook.createWorkbook(f, workbook1); // write mode
-         int sheetno = workbook.getNumberOfSheets();
-            
-            
-            for(int i =0;i<sheetno; i++)
-            {
-                WritableSheet sheet2 = workbook.getSheet(i);
-                
-                int col_tach = -1;
-                 
-                int cho_col = sheet2.getColumns();
-                for(int j =0;i<sheet2.getColumns();j++)
-                {
-                    String temp = sheet2.getCell(j,0).getContents();
-                    System.out.println(temp);
-                    if(temp.equals("TACH"))
-                    {col_tach = j;
-                      sheet2.addCell(new Label(cho_col , 0 , "CHO"));
-                    break;}
-                    
-                } 
-                System.out.println("here after tach");
-                int tach_value;
-                
-                if(col_tach!=-1)
-                {
-                    for(int j=1;j<sheet2.getRows();j++)
-                    {
-                        tach_value = Integer.parseInt(sheet2.getCell(col_tach, j).getContents());
-
-                        if(tach_value==0)
-                        {   
-                            jxl.write.Number cho = new jxl.write.Number( cho_col, j , tach_value);
-
-                            sheet2.addCell(cho);
-                        }
-
-                        else
-                        {
-                            jxl.write.Number cho = new jxl.write.Number(cho_col , j , 1);
-
-                            sheet2.addCell(cho);
-                        }
-
-
-                    } 
-                }// end of all the rows in a single sheet
-                System.out.println("cho adding completed");
-                
-            } // end of all the sheet
-        
-            workbook.write();
-            workbook.close();
-            workbook1.close();
-         
-     }
-  
+   
    public void addFchAndLch(File f) throws IOException, BiffException, WriteException
 {
+    
          Workbook workbook1 = Workbook.getWorkbook(f); // read mode
-         System.out.println("here");
+         System.out.println("Adding Fch , Lch , Frch , CSD , Csbc , Lca , Lcd ");
          WritableWorkbook workbook = Workbook.createWorkbook(f, workbook1); // write mode
          int sheetno = workbook.getNumberOfSheets();
             
@@ -110,28 +52,52 @@ public class FchAndLchAndCho {
                 int fch_col = sheet2.getColumns();
                 int lch_col = fch_col+1;
                 int frch_col = fch_col+2;
-                int chd_col = fch_col+3;
+                int csd_col = fch_col+3;
+                int csbc_col = fch_col+4;
+                int lca_col = fch_col+5;
+                int lcd_col = fch_col + 6;
                 
+//                System.out.println(fch_col  + " and " + csd_col);
+                int csd_value ;
+                double csbc_value;
                 int loc_col = -1;
+                
+                
+                int tach_col = 1, chd_col = 1;
+                
                 for(int j =0;j<sheet2.getColumns();j++)
                 {
                     String temp = sheet2.getCell(j,0).getContents();
-                    System.out.println(temp);
+//                    System.out.println(temp);
                     if(temp.equals("CHO"))
                     { cho_col = j;
                       sheet2.addCell(new Label(fch_col , 0 , "FCH"));
                       sheet2.addCell(new Label(lch_col , 0 , "LCH"));
-                      
                       sheet2.addCell(new Label(frch_col , 0 , "FRCH"));
+                      sheet2.addCell(new Label(csd_col , 0 , "CSD"));
+                      sheet2.addCell(new Label(csbc_col , 0 , "CSBC"));
+                      sheet2.addCell(new Label(lca_col , 0 , "LCA"));
+                      sheet2.addCell(new Label(lcd_col , 0 , "LCD"));
+                      
                     }
                     if(temp.equals("LOC"))
                     {
                         loc_col = j;
+                    } 
+                    
+                    if(temp.equals("TACH"))
+                    {
+                        tach_col = j;
+                    }
+                    
+                    if(temp.equals("CHD"))
+                    {
+                        chd_col = j;
                     }
                     
                 } 
                 
-                System.out.println("cho column is : " + cho_col);
+//                System.out.println("cho column is : " + cho_col);
                 if(cho_col!=-1)
                 {
                             for(int j =1;j<sheet2.getRows();j++)
@@ -192,7 +158,9 @@ public class FchAndLchAndCho {
                                    
                                   // adding frch
                                   jxl.write.Number frch_metric_value = new jxl.write.Number( frch_col, j , frch_val);
-                                     sheet2.addCell(frch_metric_value);  
+                                  sheet2.addCell(frch_metric_value);  
+                                  
+                                  
 
 
                                } else {
@@ -200,6 +168,7 @@ public class FchAndLchAndCho {
                                    // file not present
                                    fch.put(filename,0);
                                    lch.put(filename, 0);
+                                   lch_val  = 0;
                                    frch.put(filename,0);
                                    jxl.write.Number fch_metric_value = new jxl.write.Number( fch_col, j , curr_version);
                                    sheet2.addCell(fch_metric_value);
@@ -207,10 +176,69 @@ public class FchAndLchAndCho {
                                    sheet2.addCell(lch_metric_value);
                                    jxl.write.Number frch_metric_value = new jxl.write.Number( frch_col, j , curr_version);
                                    sheet2.addCell(frch_metric_value);
+                                 
                                }
+                               
+                               
+                               int loc_value = Integer.parseInt(sheet2.getCell(loc_col, j).getContents());
+                               
+                               if(loc.containsKey(filename))
+                               {
+                                   csd_value = abs(loc_value - loc.get(filename));
+                                   csbc_value = (double)loc_value/loc.get(filename);
+                               }
+                               
+                               else
+                               {
+                                   csd_value = 0;
+                                   csbc_value = 1.00;
+                                   loc.put(filename,loc_value);
+                               }
+                                  
+                                  jxl.write.Number csd_metric_value = new jxl.write.Number(csd_col, j, csd_value);
+                                  sheet2.addCell(csd_metric_value);
+                                  
+                                   jxl.write.Number csbc_metric_value = new jxl.write.Number(csbc_col, j, csbc_value);
+                                   sheet2.addCell(csbc_metric_value);
+                                  
 
-
+                               // adding lca and lcd
+                                   
+                                   try{
+                                   int tach_value  =  Integer.parseInt(sheet2.getCell(tach_col, j).getContents());
+                                   double chd_value =  Double.parseDouble(sheet2.getCell( chd_col, j).getContents());
+                                    
+                                   int lca_value , lcd_value;
+                                   if(lch_val==curr_version || lch_val==0)
+                                   {
+                                       lca_value = tach_value;
+                                       lcd_value = (int) chd_value;
+                                   }
+                                   else
+                                   {
+                                       HashMap<String,TachAndChd> lca = LcaAndLcd.lcaandlcd.get(lch_val);
+                                       
+                                       lca_value = lca.get(filename).getTach();
+                                       lcd_value = (int) lca.get(filename).getChd();
+                                   }
+                                   
+                                   
+//                                       System.out.println( " lca value is : " + lca_value + " and " + "lcd value is :  " + lcd_value);
+                                   jxl.write.Number lca_metric_value = new jxl.write.Number(lca_col, j, lca_value);
+                                   sheet2.addCell(lca_metric_value);
+                                   jxl.write.Number lcd_metric_value = new jxl.write.Number(lcd_col, j, lcd_value);
+                                   sheet2.addCell(lcd_metric_value);
+                                   }
+                                   catch(NumberFormatException e)
+                                   {
+                                       System.err.println(e);
+                                   }
+                                   
+                                   
+                                   
+                                   
                            }
+                            
                 }
                 
                 curr_version ++;
@@ -220,7 +248,7 @@ public class FchAndLchAndCho {
             workbook.write();
             workbook.close();
             workbook1.close();
-            System.out.println("fch added ");
+            System.out.println("fch lch cho frch csd csbs added ");
 
 }
    
