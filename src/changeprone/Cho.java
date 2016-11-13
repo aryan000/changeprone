@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -167,6 +168,9 @@ public class Cho extends javax.swing.JFrame {
         String userDir = System.getProperty("user.home");
         JFileChooser folder = new JFileChooser(userDir+"/Desktop");
         folder.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
+     "Excel Files  (*.xls)", "xls");
+        folder.setFileFilter(xmlfilter);
         int returnvalue = folder.showSaveDialog(this);
         File myfolder = null;
 

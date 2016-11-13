@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +28,7 @@ import jxl.read.biff.BiffException;
  *
  * @author aryan_000
  */
-class CSVFile  
+class CSVFile 
 { 
     public String kind = "";
     public String name = "";
@@ -284,7 +285,7 @@ public class CandKFilter extends javax.swing.JFrame {
             for(int i =1;i<sh.getRows();i++)
             {  
 //                System.out.println(sh.getCell(1,i).getContents());
-                javafiles.add(sh.getCell(1,i).getContents());
+                javafiles.add(sh.getCell(0,i).getContents());
                 
             }
         } catch (IOException ex) {
@@ -361,53 +362,56 @@ public class CandKFilter extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    
+     public Boolean ismatch(String jfile , String candkfile)
+  {
+      return jfile.matches(".*"+jfile);
+  }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         // here i have to process the file
         
         File f = new File(jLabel1.getText());
         ArrayList<CSVFile> data = null  ;  
-        data = getcsv(f);
+        data = getcsv(f); 
+        
+        System.out.println("received data of csv : " + data.size());
         int version = Integer.parseInt(jTextField1.getText());
         ArrayList<String> javafiles = getjavafiles(new File(jLabel3.getText()),version );
         
+        System.out.println("javafiles names received : " + javafiles.size());
         
-         ArrayList<ArrayList<String>> outer = new ArrayList<ArrayList<String>>(); 
+        
+        
+         ArrayList<ArrayList<String>> outer = new ArrayList<>(); 
         String line ;
       String pattern  ;
        DefaultTableModel model = (DefaultTableModel) FileList.getModel();
       Scanner sc = new Scanner(System.in);
       int count = 1;
-      for(int  j =0;j<javafiles.size();j++)
-      { 
+        for (String javafile : javafiles) {
 //          ArrayList<String> inner = new ArrayList<String>(); 
 //          inner.add(javafiles.get(j));
-        for(int i =0;i<data.size();i++)
-        {
-//            System.out.println( data.get(i).name);
-             
-              line = data.get(i).name;
-               
-             String temp = javafiles.get(j);
-             pattern = temp.substring(0,temp.lastIndexOf("."));
-             Pattern r = Pattern.compile(pattern);
-             Matcher m = r.matcher(line);
+            System.out.println("filename is : " + javafile);
+            for (CSVFile data1 : data) {
+                //            System.out.println( data.get(i).name);
+                line = data1.name;
+                System.out.println("CSVFile name is : " + line);
+                String temp = javafile;
+                pattern = temp.substring(0,temp.lastIndexOf("."));
+                Pattern r = Pattern.compile(pattern);
+                Matcher m = r.matcher(line);
                 if (m.find( )) {
 //                    System.out.println("Found value: " + m.group(0));
 //                    inner.add(line);
-             
-             
-             
-             model.addRow(new Object[]{count++,temp,line,data.get(i).metric, Boolean.FALSE});
-                    
+                    model.addRow(new Object[]{count++, temp, line, data1.metric, Boolean.FALSE});
                 } else {
 //                    System.out.println("NO MATCH");
                 }
-        } 
+            } 
 //        outer.add(inner);
-      }
-    
-      // end of button function  
+        }
+        // end of button function  
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
