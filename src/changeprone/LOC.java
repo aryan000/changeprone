@@ -17,25 +17,24 @@ import java.io.IOException;
 public class LOC {
    
     public static int getLines(File f) throws IOException { 
-            FileReader fr=new FileReader(f);
-            BufferedReader br=new BufferedReader(fr); 
-            int i=0;
+        int i;
+        try (FileReader fr = new FileReader(f); BufferedReader br = new BufferedReader(fr)) {
+            i = 0;
             boolean isEOF=false;
             do{
-            String t=br.readLine();
-            if(t!=null){
-            isEOF=true;
-            t=t.replaceAll("\\n|\\t|\\s", "");
-            if((!t.equals("")) && (!t.startsWith("//"))) {
-            i = i + 1;
-            }
-            }
-            else {
-            isEOF=false;
-            }
+                String t=br.readLine();
+                if(t!=null){
+                    isEOF=true;
+                    t=t.replaceAll("\\n|\\t|\\s", "");
+                    if((!t.equals("")) && (!t.startsWith("//"))) {
+                        i = i + 1;
+                    }
+                }
+                else {
+                    isEOF=false;
+                }
             }while(isEOF);
-            br.close();
-            fr.close();
+        }
             return i;
 }
 }

@@ -190,6 +190,8 @@ public class Cho extends javax.swing.JFrame {
                 addCho(myfolder);
                 FchAndLchAndCho cho = new FchAndLchAndCho();
                  cho.addFchAndLch(myfolder);
+                 cho.addwch(myfolder);
+                 cho.addAcdfAndATAF(myfolder);
             } catch (IOException | BiffException | WriteException ex) {
                 Logger.getLogger(Cho.class.getName()).log(Level.SEVERE, null, ex);
             }

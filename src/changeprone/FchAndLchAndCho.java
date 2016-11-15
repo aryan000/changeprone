@@ -56,13 +56,13 @@ public class FchAndLchAndCho {
                 int csbc_col = fch_col+4;
                 int lca_col = fch_col+5;
                 int lcd_col = fch_col + 6;
-                
+                int wch_col = fch_col + 7;
 //                System.out.println(fch_col  + " and " + csd_col);
                 int csd_value ;
                 double csbc_value;
                 int loc_col = -1;
                 
-                
+                int boc_col = 1;
                 int tach_col = 1, chd_col = 1;
                 
                 for(int j =0;j<sheet2.getColumns();j++)
@@ -79,6 +79,7 @@ public class FchAndLchAndCho {
                       sheet2.addCell(new Label(lca_col , 0 , "LCA"));
                       sheet2.addCell(new Label(lcd_col , 0 , "LCD"));
                       
+                      
                     }
                     if(temp.equals("LOC"))
                     {
@@ -93,6 +94,10 @@ public class FchAndLchAndCho {
                     if(temp.equals("CHD"))
                     {
                         chd_col = j;
+                    }
+                    if(temp.equals("BOC"))
+                    {
+                        boc_col = j;
                     }
                     
                 } 
@@ -228,16 +233,21 @@ public class FchAndLchAndCho {
                                    sheet2.addCell(lca_metric_value);
                                    jxl.write.Number lcd_metric_value = new jxl.write.Number(lcd_col, j, lcd_value);
                                    sheet2.addCell(lcd_metric_value);
-                                   }
+                                    }
                                    catch(NumberFormatException e)
                                    {
                                        System.err.println(e);
-                                   }
+                                   }                            
+                                 
+                                   
+                                   // adding wch
                                    
                                    
+
                                    
                                    
-                           }
+                           } // end of j which is row
+                                   
                             
                 }
                 
@@ -250,9 +260,169 @@ public class FchAndLchAndCho {
             workbook1.close();
             System.out.println("fch lch cho frch csd csbs added ");
 
-}
+} 
+   
+   public void addwch(File f) throws IOException, BiffException, WriteException 
+   {    
+        Workbook workbook1 = Workbook.getWorkbook(f); // read mode
+        System.out.println("Adding WCH");
+        WritableWorkbook workbook = Workbook.createWorkbook(f, workbook1); // write mode
+        int sheetno = workbook.getNumberOfSheets();
+        
+        String filename;
+        for(int i =0;i<sheetno; i++)
+        {
+            WritableSheet sheet2 = workbook.getSheet(i);
+            int wch_col , boc_col = 2 , wcd_col ;
+            double wch_value = 0 , wcd_value = 0;
+            curr_version = 1;
+            for(int j =0;j<sheet2.getColumns();j++)
+                { 
+                    String temp = sheet2.getCell(j,0).getContents();
+                    if(temp.equals("BOC"))
+                        boc_col = j;
+                } 
+            
+            wch_col = sheet2.getColumns();
+            wcd_col = wch_col + 1;
+            sheet2.addCell(new Label(wch_col , 0 , "WCH"));
+            sheet2.addCell(new Label(wcd_col , 0 , "WCD"));
+            for(int j =1;j<sheet2.getRows();j++)
+            { 
+                filename = sheet2.getCell(0,j).getContents();
+                int boc_value = Integer.parseInt(sheet2.getCell(boc_col, j).getContents());
+//                    System.out.println("boc value is : "+ boc_value);
+                double temp;
+                System.out.println(filename + boc_value+1 + curr_version );
+                for(int r = boc_value + 1 ; r<= curr_version  ; r++)
+                {
+                    HashMap<String,TachAndChd> lca = LcaAndLcd.lcaandlcd.get(r);
+                    int tach_val = lca.get(filename).getTach();
+                    double chd_val = lca.get(filename).getChd();
+                    temp =   Math.pow(2,r- curr_version);
+                    
+                    wch_value += tach_val*temp;
+                    wcd_value += chd_val*temp;
+                    System.out.println(filename + tach_val + "and " + chd_val + " and " + wch_value + " and " + wcd_value);
+                }
+                jxl.write.Number wch_metric_value = new jxl.write.Number(wch_col , j ,wch_value);
+                 sheet2.addCell(wch_metric_value);
+                 jxl.write.Number wcd_metric_value = new jxl.write.Number(wcd_col , j ,wcd_value);
+                 sheet2.addCell(wcd_metric_value);
+            }
+            
+            curr_version++;
+        }
+        
+       workbook.write();
+       workbook.close();
+       workbook1.close();
+       System.out.println("wch added ");
+   }
    
    
+   public void addAcdfAndATAF(File f) throws IOException, BiffException, WriteException
+   {
+        Workbook workbook1 = Workbook.getWorkbook(f); // read mode
+        System.out.println("Adding ACDF ATAF and WFR");
+        WritableWorkbook workbook = Workbook.createWorkbook(f, workbook1); // write mode
+        int sheetno = workbook.getNumberOfSheets();
+        
+       
+        String filename;
+        for(int i =0;i<sheetno; i++)
+        {
+            
+            WritableSheet sheet2 = workbook.getSheet(i);
+             int acdf_col = -1 ,ataf_col = -1 , frch_col = -1 , boc_col = 1 , frch_value=0 ,wfr_col = -1 , wfr_value=0;
+            double acdf_value = 0 , ataf_value = 0;
+            curr_version = 1;
+            for(int j =0;j<sheet2.getColumns();j++)
+                { 
+                    String temp = sheet2.getCell(j,0).getContents();
+                    if(temp.equals("BOC"))
+                        boc_col = j;
+                    if(temp.equals("FRCH"))
+                        frch_col = j;
+                } 
+            
+             acdf_col = sheet2.getColumns();
+            ataf_col = acdf_col + 1;
+            wfr_col = acdf_col+2;
+            sheet2.addCell(new Label(acdf_col , 0 , "ACDF"));
+            sheet2.addCell(new Label(ataf_col , 0 , "ATAF"));
+            sheet2.addCell(new Label(wfr_col , 0 , "WFR"));
+            for(int j =1;j<sheet2.getRows();j++)
+            { 
+                filename = sheet2.getCell(0,j).getContents();
+                int boc_value = Integer.parseInt(sheet2.getCell(boc_col, j).getContents());
+//                    System.out.println("boc value is : "+ boc_value);
+                
+                frch_value = Integer.parseInt(sheet2.getCell(frch_col, j).getContents());
+                
+                if(frch_value ==0)
+                {
+                    jxl.write.Number acdf_metric_value = new jxl.write.Number(acdf_col , j ,0);
+                 sheet2.addCell(acdf_metric_value);
+                 jxl.write.Number ataf_metric_value = new jxl.write.Number(ataf_col , j ,0);
+                 sheet2.addCell(ataf_metric_value);
+                 
+                 wfr_value = 0;
+                    for(int r = boc_value + 1 ; r<= curr_version  ; r++)
+                      {
+                          HashMap<String,TachAndChd> lca = LcaAndLcd.lcaandlcd.get(r);
+                          int wfr_tach_value = lca.get(filename).getTach();
+                          
+                          if(wfr_tach_value==0)
+                              continue;
+                          else
+                              wfr_value += r-1;
+                          
+                      }
+                    
+                    jxl.write.Number wfr_metric_value = new jxl.write.Number(wfr_col, j, wfr_value);
+                    sheet2.addCell(wfr_metric_value);
+                }
+                else
+                { 
+                    double chd_value = 0;
+                    int tach_value = 0;
+                    int wfr_tach_value = 0;
+                    wfr_value = 0;
+                    for(int r = boc_value + 1 ; r<= curr_version  ; r++)
+                      {
+                          HashMap<String,TachAndChd> lca = LcaAndLcd.lcaandlcd.get(r);
+                          wfr_tach_value = lca.get(filename).getTach();
+                          tach_value += wfr_tach_value;
+                          chd_value += lca.get(filename).getChd();
+                          
+                          if(wfr_tach_value==0)
+                              continue;
+                          else
+                              wfr_value += r-1;
+                          
+                      } 
+                    
+                      acdf_value = (double)chd_value/frch_value;
+                      ataf_value = (double)tach_value/frch_value;
+                      
+                    jxl.write.Number acdf_metric_value = new jxl.write.Number(acdf_col, j, acdf_value);
+                    sheet2.addCell(acdf_metric_value);
+                    jxl.write.Number ataf_metric_value = new jxl.write.Number(ataf_col, j, ataf_value);
+                    sheet2.addCell(ataf_metric_value);
+                    jxl.write.Number wfr_metric_value = new jxl.write.Number(wfr_col, j, wfr_value);
+                    sheet2.addCell(wfr_metric_value);
+                }  
+            }
+         
+            
+            curr_version++;
+        }
+       workbook.write();
+       workbook.close();
+       workbook1.close();
+       System.out.println("ACDF and ATAF and WFR added ");
+   }
    
    
    

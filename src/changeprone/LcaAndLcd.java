@@ -17,7 +17,8 @@ class TachAndChd
 {
     
        int tach ;
-        double chd;
+       double chd;
+       
     
     TachAndChd(int tach , double chd)
     {
@@ -37,6 +38,9 @@ class TachAndChd
 }
 public class LcaAndLcd {
     
+    /**
+     *
+     */
     public final static ArrayList<HashMap<String,TachAndChd>> lcaandlcd = new ArrayList<>();
         static int curr_version  = 0;
         
