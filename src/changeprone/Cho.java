@@ -30,6 +30,7 @@ public class Cho extends javax.swing.JFrame {
     /**
      * Creates new form ChoAndFch
      */
+    public File myfolder = null;
     public Cho() {
         initComponents();
     }
@@ -164,24 +165,28 @@ public class Cho extends javax.swing.JFrame {
          
      }
      
-     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-
-        String userDir = System.getProperty("user.home");
+     public void create()
+     {
+         String userDir = System.getProperty("user.home");
         JFileChooser folder = new JFileChooser(userDir+"/Desktop");
         folder.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
         "Excel Files  (*.xls)", "xls");
         folder.setFileFilter(xmlfilter);
         int returnvalue = folder.showSaveDialog(this);
-        File myfolder = null;
+//        File myfolder = null;
 
         if(returnvalue == JFileChooser.APPROVE_OPTION)
         {
-            myfolder = folder.getSelectedFile();
+            this.myfolder = folder.getSelectedFile();
         }
 
+     }
+     
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+
+        
         if(myfolder!=null)
         {
             JOptionPane.showMessageDialog(null,"The current choosen file directory is : " + myfolder);

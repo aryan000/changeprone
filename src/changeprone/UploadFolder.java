@@ -111,7 +111,7 @@ public class UploadFolder extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         About = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel1.setText(" Change Proneness");
@@ -511,6 +511,23 @@ public class UploadFolder extends javax.swing.JFrame {
             
             JOptionPane.showMessageDialog(null,"Total number of files are : " + filenames.size());
             filenames.clear();
+            
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog(this, "Version Uploaded \n Do you want "
+                    + "to Upload Another Version", "Upload New Version ", dialogButton);
+            if (dialogResult == 0) {
+                System.out.println("Yes option");
+                filetable.setVisible(false);
+            } else {
+                System.out.println("No Option");
+                MainUI m = new MainUI();
+                JOptionPane.showMessageDialog(null,"Your excel file is created with the name Output.xls");
+                MainUI.check1 = 1;
+                
+                
+                m.setVisible(true);
+                System.out.println("value is : " + MainUI.check1);
+            }
         } catch (IOException | WriteException | BiffException ex) {
             Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
         }
