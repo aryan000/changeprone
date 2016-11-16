@@ -167,7 +167,7 @@ public class Cho extends javax.swing.JFrame {
      
      public void create()
      {
-         String userDir = System.getProperty("user.home");
+       /*  String userDir = System.getProperty("user.home");
         JFileChooser folder = new JFileChooser(userDir+"/Desktop");
         folder.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
@@ -179,8 +179,27 @@ public class Cho extends javax.swing.JFrame {
         if(returnvalue == JFileChooser.APPROVE_OPTION)
         {
             this.myfolder = folder.getSelectedFile();
+        }*/
+         
+          if(myfolder!=null)
+        {
+            JOptionPane.showMessageDialog(null,"The current choosen file directory is : " + myfolder);
+            jLabel1.setText(myfolder.toString());
+            try {
+                addCho(myfolder);
+                FchAndLchAndCho cho = new FchAndLchAndCho();
+                 cho.addFchAndLch(myfolder);
+                 cho.addwch(myfolder);
+                 cho.addAcdfAndATAF(myfolder);
+                 
+                 JOptionPane.showMessageDialog(rootPane, "Rest of the Metrics are added ");
+                 MainUI.check2 = 1;
+                 MainUI m = new MainUI();
+                 m.setVisible(true);
+            } catch (IOException | BiffException | WriteException ex) {
+                Logger.getLogger(Cho.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
      }
      
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

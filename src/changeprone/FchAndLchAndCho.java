@@ -293,7 +293,7 @@ public class FchAndLchAndCho {
                 int boc_value = Integer.parseInt(sheet2.getCell(boc_col, j).getContents());
 //                    System.out.println("boc value is : "+ boc_value);
                 double temp;
-                System.out.println(filename + boc_value+1 + curr_version );
+//                System.out.println(filename + boc_value+1 + curr_version );
                 for(int r = boc_value + 1 ; r<= curr_version  ; r++)
                 {
                     HashMap<String,TachAndChd> lca = LcaAndLcd.lcaandlcd.get(r);
@@ -303,7 +303,7 @@ public class FchAndLchAndCho {
                     
                     wch_value += tach_val*temp;
                     wcd_value += chd_val*temp;
-                    System.out.println(filename + tach_val + "and " + chd_val + " and " + wch_value + " and " + wcd_value);
+//                    System.out.println(filename + tach_val + "and " + chd_val + " and " + wch_value + " and " + wcd_value);
                 }
                 jxl.write.Number wch_metric_value = new jxl.write.Number(wch_col , j ,wch_value);
                  sheet2.addCell(wch_metric_value);

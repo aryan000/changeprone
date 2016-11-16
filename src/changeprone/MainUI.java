@@ -21,8 +21,12 @@ public class MainUI extends javax.swing.JFrame {
     public static int check1 = 0 , check2 = 0 , check3 = 0;
     public MainUI() {
         initComponents();
+        myinitComponents();
         
-        System.out.println("check 1 is :  "+ check1);
+        
+    }
+    public void myinitComponents(){
+        System.out.println(" constructor called check 1 is :  "+ check1);
         if(check1==1)
         {
             button1.setVisible(false);
@@ -262,7 +266,7 @@ public class MainUI extends javax.swing.JFrame {
         {
             myfolder = folder.getSelectedFile();
         }
-        
+        this.dispose();
         Cho cho = new Cho();
         cho.myfolder = myfolder;
         cho.create();
@@ -271,7 +275,6 @@ public class MainUI extends javax.swing.JFrame {
     private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed
         // TODO add your handling code here:
         CandKFilter1 ck1 = new CandKFilter1();
-        
         ck1.setVisible(true);
     }//GEN-LAST:event_button3ActionPerformed
 
