@@ -5,10 +5,7 @@
  */
 package changeprone;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -19,4 +16,17 @@ public class Boc {
    public final static HashMap<String, Integer> bocMap = new HashMap<>();
       
         static int curr_version  = 0;
-    }
+    
+
+public static void main(String s[])
+{
+  System.out.println("hello");
+  
+            Metric1 m = new Metric1();
+          
+            m.setVisible(true);
+            
+}
+}
+
+

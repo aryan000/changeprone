@@ -26,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -135,6 +136,7 @@ public class UploadFolder extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Upload Folder");
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel1.setText(" Change Proneness");
@@ -269,6 +271,7 @@ public class UploadFolder extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     public JFrame frame ;
+    public Boolean Folder_selected = false;
     private void selectfolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectfolderActionPerformed
         String userDir = System.getProperty("user.home");
         JFileChooser folder = new JFileChooser(userDir+"/Desktop");
@@ -277,12 +280,13 @@ public class UploadFolder extends javax.swing.JFrame {
 //        FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
 //     "Excel Files  (*.xls)", "xls");
 //        folder.setFileFilter(xmlfilter);
-        int returnvalue = folder.showSaveDialog(this);
+        int returnvalue = folder.showDialog(frame,"Select Folder");
         
         File myfolder = null;
         if(returnvalue == JFileChooser.APPROVE_OPTION)
         {
             myfolder = folder.getSelectedFile();
+            
 //            System.out.println(myfolder);         
         }
         
@@ -291,8 +295,8 @@ public class UploadFolder extends javax.swing.JFrame {
         if(myfolder!=null)
         {
             JOptionPane.showMessageDialog(null,"The current choosen file directory is : " + myfolder);
-            
-               frame = new JFrame("Folder Selected");
+            Folder_selected = true;
+            frame = new JFrame("Folder Selected");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setLayout(new BorderLayout());
             frame.add(new TestPane(myfolder));
@@ -300,13 +304,9 @@ public class UploadFolder extends javax.swing.JFrame {
             frame.setLocationRelativeTo(filetable);
             frame.setVisible(true);
              
-            
-            
-            
+            listofFiles(myfolder);
+            sortByName();
         }
-        
-        listofFiles(myfolder);
-        sortByName();
     }//GEN-LAST:event_selectfolderActionPerformed
 
     /**
@@ -515,13 +515,47 @@ public class UploadFolder extends javax.swing.JFrame {
     }
     
     
-    
+    public String fname = "";
     private void processActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processActionPerformed
         
+          
+        if(Folder_selected==false)
+        {JOptionPane.showMessageDialog(rootPane,"Please select the folder first");
+         
+            return;
+         }
+        else if(fname.isEmpty())
+        {
+             String userDir = System.getProperty("user.home");
+            JFileChooser folder = new JFileChooser(userDir+"/Desktop");
+            folder.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
+            "Excel Files  (*.xls)", "xls");
+            folder.setFileFilter(xmlfilter);
+            int returnvalue = folder.showSaveDialog(frame);
+            
+            if(returnvalue == JFileChooser.APPROVE_OPTION)
+                
+            {
+                File myfolder = folder.getSelectedFile();
+                JOptionPane.showMessageDialog(rootPane, myfolder);
+                fname = myfolder.getAbsolutePath().toString() + ".xls";
+                System.out.println(fname);
+                
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(rootPane,"Please select file name to save");
+            }
+            
+            
+            
+        } 
         try {
           filetable.setVisible(true);
           File f = new File("C:\\Users\\aryan_000\\Desktop\\output.xls");
-            
+          
+          f = new File(fname);
           
              if(!f.exists())
              {  System.out.println("File does not exist");
@@ -558,7 +592,7 @@ public class UploadFolder extends javax.swing.JFrame {
             } else {
                 System.out.println("No Option");
                 
-                JOptionPane.showMessageDialog(null,"Your excel file is created with the name Output.xls");
+                JOptionPane.showMessageDialog(null,"Your excel file is created with the name" + fname );
                 MainUI.check1 = 1;
                 
                 this.dispose();
@@ -568,6 +602,8 @@ public class UploadFolder extends javax.swing.JFrame {
             }
         } catch (IOException | WriteException | BiffException ex) {
             Logger.getLogger(UploadFolder.class.getName()).log(Level.SEVERE, null, ex);
+            
+            JOptionPane.showMessageDialog(rootPane," File is already opened or File cannot be created");
         }
     }//GEN-LAST:event_processActionPerformed
 
@@ -654,6 +690,7 @@ public class UploadFolder extends javax.swing.JFrame {
             
             JButton confirm = new JButton("Close");
             add(confirm, BorderLayout.SOUTH);
+            
 
             confirm.addActionListener(new ActionListener() {
 

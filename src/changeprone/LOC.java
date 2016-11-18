@@ -20,7 +20,7 @@ public class LOC {
         int i;
         try (FileReader fr = new FileReader(f); BufferedReader br = new BufferedReader(fr)) {
             i = 0;
-            boolean isEOF=false;
+            Boolean isEOF=false;
             do{
                 String t=br.readLine();
                 if(t!=null){

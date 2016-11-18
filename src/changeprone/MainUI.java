@@ -7,6 +7,7 @@ package changeprone;
 
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -25,6 +26,7 @@ public class MainUI extends javax.swing.JFrame {
         
         
     }
+    
     public void myinitComponents(){
         System.out.println(" constructor called check 1 is :  "+ check1);
         if(check1==1)
@@ -84,7 +86,8 @@ public class MainUI extends javax.swing.JFrame {
         checked3 = new javax.swing.JLabel();
         button3 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Predict Change Prone");
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -250,6 +253,7 @@ public class MainUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_button1ActionPerformed
 
+    
     private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
         // TODO add your handling code here:
         
@@ -259,17 +263,23 @@ public class MainUI extends javax.swing.JFrame {
         FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
         "Excel Files  (*.xls)", "xls");
         folder.setFileFilter(xmlfilter);
-        int returnvalue = folder.showSaveDialog(this);
+        int returnvalue = folder.showOpenDialog(this);
         File myfolder = null;
 
         if(returnvalue == JFileChooser.APPROVE_OPTION)
         {
             myfolder = folder.getSelectedFile();
+            this.dispose();
+            Metric1 m = new Metric1();
+            m.myfolder = myfolder;
+            m.setVisible(true);
+//            m.create();
         }
-        this.dispose();
-        Cho cho = new Cho();
-        cho.myfolder = myfolder;
-        cho.create();
+        else
+        {
+            JOptionPane.showMessageDialog(rootPane,"No Folder Selected");
+        }
+        
     }//GEN-LAST:event_button2ActionPerformed
 
     private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed

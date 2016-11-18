@@ -6,6 +6,7 @@
 package changeprone;
 
 import java.awt.BorderLayout;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -23,6 +24,8 @@ public class TableDisplay extends javax.swing.JFrame {
         
 //        frame.getContentPane().add( new JScrollPane( table ), BorderLayout.CENTER );
         this.getContentPane().add( CandKScrollablePane, BorderLayout.CENTER);
+         
+        jButton1.setVisible(false);
         
     }
 
@@ -39,7 +42,8 @@ public class TableDisplay extends javax.swing.JFrame {
         CandKTable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("C and K Filtered");
 
         CandKTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -76,8 +80,8 @@ public class TableDisplay extends javax.swing.JFrame {
                 .addComponent(CandKScrollablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(259, 259, 259)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(260, 260, 260)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -85,9 +89,8 @@ public class TableDisplay extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(CandKScrollablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -96,7 +99,7 @@ public class TableDisplay extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         
-        this.setVisible(false);
+         
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -141,6 +144,10 @@ public class TableDisplay extends javax.swing.JFrame {
     public JScrollPane getJScrollPane()
     {
         return CandKScrollablePane;
+    }
+    public JButton getButton()
+    {
+        return jButton1;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane CandKScrollablePane;

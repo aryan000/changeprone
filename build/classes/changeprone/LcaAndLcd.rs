@@ -1,2 +1,0 @@
-changeprone.LcaAndLcd
-changeprone.TachAndChd

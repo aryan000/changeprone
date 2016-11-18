@@ -7,17 +7,17 @@ package changeprone;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,6 +35,43 @@ import jxl.write.WriteException;
  *
  * @author aryan_000
  */
+
+class CSVFile 
+{ 
+    public String kind = "";
+    public String name = "";
+    int [] arr = new int[10];
+    ArrayList<Integer> metric = new ArrayList<>();
+    
+  public CSVFile(String st)
+  {   
+      int i =0;
+      for (String retval: st.split(",")) {
+            
+          if(i==0)
+          {
+              kind = retval;
+              i++;
+          }
+          else if(i==1)
+          {
+              name = retval;
+              i++;
+          }
+         else if(retval.isEmpty())
+         {
+             metric.add(0);
+         }
+          else
+         {  
+             metric.add(Integer.parseInt(retval));
+//             arr[i-2] = Integer.parseInt(retval?);
+//             i++;
+         }
+                      
+                   }
+  } 
+}
 
 public class CandKFilter1 extends javax.swing.JFrame {
 
@@ -59,8 +96,10 @@ public class CandKFilter1 extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        version_no = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("C and K Filter");
 
         jLabel1.setLabelFor(jLabel1);
         jLabel1.setText(" No File Selected");
@@ -91,31 +130,40 @@ public class CandKFilter1 extends javax.swing.JFrame {
             }
         });
 
+        version_no.setText("0");
+        version_no.setBorder(javax.swing.BorderFactory.createTitledBorder("Select Project Version(only in number)"));
+        version_no.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                version_noActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(37, 37, 37))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(115, 115, 115)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(version_no, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(45, 45, 45)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton2)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(125, 125, 125)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,9 +176,11 @@ public class CandKFilter1 extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jButton2))
-                .addGap(38, 38, 38)
+                .addGap(18, 18, 18)
+                .addComponent(version_no, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addGap(68, 68, 68))
         );
 
         pack();
@@ -188,7 +238,7 @@ public class CandKFilter1 extends javax.swing.JFrame {
             try {
                 fr = new FileReader(f);
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(CandKFilter.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CandKFilter1.class.getName()).log(Level.SEVERE, null, ex);
             }
             BufferedReader br = new BufferedReader(fr);
             String st;
@@ -199,7 +249,7 @@ public class CandKFilter1 extends javax.swing.JFrame {
                     data.add(t);
                 }
             } catch (IOException ex) {
-                Logger.getLogger(CandKFilter.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CandKFilter1.class.getName()).log(Level.SEVERE, null, ex);
             }
           
           return data;
@@ -222,7 +272,7 @@ public class CandKFilter1 extends javax.swing.JFrame {
                 
             }
         } catch (IOException | BiffException ex) {
-            Logger.getLogger(CandKFilter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CandKFilter1.class.getName()).log(Level.SEVERE, null, ex);
         }
         
 //         System.out.println("before returning");
@@ -244,7 +294,7 @@ public class CandKFilter1 extends javax.swing.JFrame {
   
   public void buildcsv(HashMap<String , CSVFile> candkdata) throws IOException, WriteException 
   {
-      File ft = new File("C:\\Users\\aryan_000\\Desktop\\ck.xls");
+      File ft = new File("C:\\Users\\aryan_000\\Desktop\\cNk.xls");
        WritableWorkbook workbook =  Workbook.createWorkbook(ft);
        WritableSheet sheet = workbook.createSheet("candk", 0); 
         
@@ -292,10 +342,10 @@ public class CandKFilter1 extends javax.swing.JFrame {
        
       DefaultTableModel model = (DefaultTableModel) jt.getModel();
       
-       jt.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//       jt.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
        
        JScrollPane js = td.getJScrollPane();
-         js.setViewportView(jt);
+//         js.setViewportView(jt);
           Vector colnames = new Vector();
           colnames.add("S.No");
           colnames.add("Filename");
@@ -335,18 +385,44 @@ public class CandKFilter1 extends javax.swing.JFrame {
 //            System.out.println( key  + "    " + temp.name);
             
          }
+      
+      JButton jb = td.getButton();
+      jb.setVisible(true);
         
       
+  }
+  
+  Boolean check()
+  {
+      if(jLabel1.getText().isEmpty() || jLabel1.getText().equalsIgnoreCase(" No File Selected"))
+      {JOptionPane.showMessageDialog(rootPane, "Please select the CSV File for C and K");
+          return false;
+        }
+      if(jLabel2.getText().isEmpty() || jLabel2.getText().equalsIgnoreCase(" No File Selected"))
+         {JOptionPane.showMessageDialog(rootPane, "Please select the Excel File for Project");
+          return false;
+        } 
+      
+      if(version_no.getText().isEmpty())
+          {JOptionPane.showMessageDialog(rootPane, "Please select the version of the project ");
+          return false;
+        }
+      
+      return true;
   }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
          
+        
+        if(!check())
+            return;
         File f = new File(jLabel1.getText());
         ArrayList<CSVFile> data = null  ;  
         data = getcsv(f); 
         
         System.out.println("received data of csv : " + data.size());
         int version = 0;
+        version  =  Integer.parseInt(version_no.getText());
         ArrayList<String> javafiles = getjavafiles(new File(jLabel2.getText()),version );
         
         System.out.println("javafiles names received : " + javafiles.size());
@@ -373,6 +449,7 @@ public class CandKFilter1 extends javax.swing.JFrame {
             showtable(candkdata);
         } catch (IOException | WriteException ex) {
             Logger.getLogger(CandKFilter1.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, "Some Error Occurred. Cannot write data to csv. \n Try Later");
         }
         
         System.out.println("total rows are : " + candkdata.size());
@@ -393,6 +470,10 @@ public class CandKFilter1 extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void version_noActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_version_noActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_version_noActionPerformed
 
     /**
      * @param args the command line arguments
@@ -435,5 +516,6 @@ public class CandKFilter1 extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField version_no;
     // End of variables declaration//GEN-END:variables
 }
